@@ -12,12 +12,16 @@ export async function POST(req: NextRequest) {
     const body = await req.text()
     const sig = req.headers.get("stripe-signature") || ""
     
-    console.log("🔔 Webhook received")
+    console.log("🔔 Stripe webhook received")
     
     if (!webhookSecret) {
       console.warn("⚠️ STRIPE_WEBHOOK_SECRET not configured")
       return NextResponse.json(
-        { error: "Webhook not configured", configured: false },
+        { 
+          error: "Webhook not configured",
+          configured: false,
+          help: "Set STRIPE_WEBHOOK_SECRET in Vercel Environment Variables"
+        },
         { status: 500 }
       )
     }
@@ -25,6 +29,7 @@ export async function POST(req: NextRequest) {
     let event
     try {
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
+      console.log(`✅ Webhook verified: ${event.type} (livemode: ${event.livemode})`)
     } catch (err: any) {
       console.error("❌ Webhook signature verification failed:", err.message)
       return NextResponse.json(
@@ -33,18 +38,29 @@ export async function POST(req: NextRequest) {
       )
     }
     
-    // Handle the event
-    console.log(`✅ Webhook verified: ${event.type}`)
-    
+    // Handle specific event types
     switch (event.type) {
       case "checkout.session.completed":
         const session = event.data.object as any
         console.log(`💰 Payment successful: ${session.id}`)
-        // TODO: Update your database, send email, etc.
+        console.log(`   Customer: ${session.customer_email || session.customer}`)
+        console.log(`   Amount: ${session.amount_total / 100} ${session.currency}`)
+        
+        // TODO: Update your database here
+        // Example: Update user subscription, send email, etc.
+        
         break
         
-      case "payment_intent.succeeded":
-        console.log("💳 Payment intent succeeded")
+      case "customer.subscription.created":
+        console.log("📅 Subscription created")
+        break
+        
+      case "invoice.paid":
+        console.log("📄 Invoice paid")
+        break
+        
+      case "invoice.payment_failed":
+        console.log("❌ Payment failed")
         break
         
       default:
