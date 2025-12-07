@@ -1,22 +1,20 @@
-'use client'
+﻿// contexts/AuthContext.tsx
+"use client"
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
+// import { supabase } from '@/lib/supabase/client'  // Comment out for now
 
 interface User {
   id: string
-  email: string
-  user_metadata?: {
-    full_name?: string
-  }
+  email?: string
 }
 
 interface AuthContextType {
   user: User | null
   loading: boolean
-  signIn: (email: string, password: string) => Promise<any>
-  signUp: (email: string, password: string, metadata?: any) => Promise<any>
+  signIn: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -28,52 +26,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
-    // Check active sessions and sets the user
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user ?? null)
-      setLoading(false)
-    }
-
-    checkSession()
-
-    // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null)
-        setLoading(false)
-      }
-    )
-
-    return () => subscription.unsubscribe()
+    // TODO: Implement auth check later
+    setLoading(false)
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    
-    if (error) throw error
-    return data
+    // TODO: Implement sign in
+    console.log("Sign in:", email)
   }
 
-  const signUp = async (email: string, password: string, metadata?: any) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata,
-      },
-    })
-    
-    if (error) throw error
-    return data
+  const signUp = async (email: string, password: string) => {
+    // TODO: Implement sign up
+    console.log("Sign up:", email)
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
+    // TODO: Implement sign out
+    console.log("Sign out")
   }
 
   return (
