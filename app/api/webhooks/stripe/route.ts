@@ -4,6 +4,7 @@ import Stripe from "stripe"
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "")
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ""
 
+// สำหรับ Next.js 16: ใช้แบบนี้แทน export const config
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
@@ -71,7 +72,8 @@ export async function POST(req: NextRequest) {
       received: true,
       type: event.type,
       livemode: event.livemode,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      message: "Webhook processed successfully"
     })
     
   } catch (error: any) {
