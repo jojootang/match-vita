@@ -3,14 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "seed": "tsx scripts/seed-database.ts",
-    "db:reset": "tsx scripts/reset-database.ts",
-    "db:migrate": "tsx scripts/migrate-database.ts"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
+},
   "dependencies": {
     "@supabase/supabase-js": "^2.86.2",
     "lucide-react": "^0.556.0",
