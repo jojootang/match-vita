@@ -1,24 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ข้าม TypeScript errors ชั่วคราว
+  // TypeScript: ignore errors
   typescript: {
     ignoreBuildErrors: true,
   },
   
-  // ข้าม ESLint errors
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // ลบ eslint config ออก (Next.js 16 ไม่รองรับใน config)
+  // ให้ใช้ไฟล์ .eslintrc.json แทน
   
-  // ปิด image optimization เพื่อลดความซับซ้อน
+  // Images config
   images: {
     unoptimized: true,
   },
   
-  // ปิดบางฟีเจอร์ที่ไม่จำเป็นสำหรับ build ครั้งแรก
-  experimental: {
-    // ปิดอะไรที่อาจทำให้ build ค้าง
-  },
+  // เพิ่มถ้าต้องการ disable Turbopack
+  // (แต่อยู่ใน experimental ซึ่ง Next.js 16 อาจไม่รองรับ)
 };
 
 module.exports = nextConfig;
